@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Media by Tex — Photography</title>
+<meta name="description" content="Media by Tex — photographs of brands, athletes and Country by Tex Walker, a Gunditjmara photographer working across the Kulin Nations." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23D6803C' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ECE7DD'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --bg-soft:#0b0a08;
+    --surface:#141109;
+    --surface-2:#1c1812;
+    --bone:#ECE7DD;
+    --bone-dim:#9a938a;
+    --bone-faint:#6f6a62;
+    --ochre:#D6803C;
+    --ochre-bright:#F0A35C;
+    --line:rgba(236,231,221,0.12);
+    --line-2:rgba(236,231,221,0.22);
+    --nav-h:68px;
+    --pad:clamp(20px, 6vw, 88px);
+    --maxw:1320px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--bone);
+    font-family:"Hanken Grotesk", system-ui, sans-serif;
+    font-size:clamp(1rem,0.96rem + 0.2vw,1.08rem);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  section{scroll-margin-top:var(--nav-h);}
+
+  .mono{
+    font-family:"JetBrains Mono", ui-monospace, monospace;
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--bone-dim);
+  }
+  .display{
+    font-family:"Big Shoulders Display", "Hanken Grotesk", sans-serif;
+    line-height:.9;
+    text-transform:uppercase;
+    letter-spacing:.005em;
+    font-weight:800;
+  }
+
+  /* ---------- crop marks ---------- */
+  .crop{position:absolute;width:16px;height:16px;border:0 solid var(--ochre);pointer-events:none;z-index:3;}
+  .crop.tl{top:18px;left:18px;border-top-width:1.5px;border-left-width:1.5px;}
+  .crop.tr{top:18px;right:18px;border-top-width:1.5px;border-right-width:1.5px;}
+  .crop.bl{bottom:18px;left:18px;border-bottom-width:1.5px;border-left-width:1.5px;}
+  .crop.br{bottom:18px;right:18px;border-bottom-width:1.5px;border-right-width:1.5px;}
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 var(--pad);
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    transition:background .3s ease, border-color .3s ease;
+  }
+  .nav.scrolled{background:rgba(0,0,0,0.82);border-bottom-color:var(--line-2);}
+  .brand{display:flex;align-items:center;gap:11px;font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:.04em;text-transform:uppercase;}
+  .brand .lens{width:18px;height:18px;border:1.5px solid var(--ochre);border-radius:50%;position:relative;flex:none;}
+  .brand .lens::after{content:"";position:absolute;inset:4.5px;border-radius:50%;background:var(--bone);}
+  .nav-links{display:flex;align-items:center;gap:clamp(18px,2.4vw,40px);list-style:none;}
+  .nav-links a{
+    font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--bone-dim);position:relative;padding:6px 0;transition:color .25s ease;
+  }
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--ochre);transition:width .28s ease;}
+  .nav-links a:hover,.nav-links a.active{color:var(--bone);}
+  .nav-links a.active::after,.nav-links a:hover::after{width:100%;}
+  .menu-btn{display:none;background:none;border:1px solid var(--line-2);color:var(--bone);width:42px;height:38px;border-radius:2px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center;}
+  .menu-btn span{display:block;width:18px;height:1.5px;background:var(--bone);transition:transform .3s ease,opacity .3s ease;}
+  .menu-btn.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+  .menu-btn.open span:nth-child(2){opacity:0;}
+  .menu-btn.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:calc(var(--nav-h) + 30px) var(--pad) clamp(34px,7vh,72px);
+    overflow:hidden;
+  }
+  .hero-bg{position:absolute;inset:0;z-index:0;}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;filter:grayscale(0.18) contrast(1.05) brightness(0.82);transform:scale(1.04);}
+  .hero-bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.15) 32%,rgba(0,0,0,0.55) 72%,rgba(0,0,0,0.95) 100%),
+               radial-gradient(120% 90% at 80% 10%,rgba(214,128,60,0.12),transparent 55%);}
+  .hero-meta{position:relative;z-index:2;display:flex;justify-content:space-between;gap:16px;margin-bottom:clamp(20px,4vh,40px);flex-wrap:wrap;}
+  .hero-inner{position:relative;z-index:2;max-width:var(--maxw);width:100%;margin:0 auto;}
+  .hero-eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:22px;color:var(--bone);}
+  .hero-eyebrow::before{content:"";width:48px;height:1px;background:var(--ochre);}
+  .hero h1{
+    font-size:clamp(3.4rem,15vw,15.5rem);color:var(--bone);
+    margin:0 0 4px;font-weight:900;
+  }
+  .hero h1 .by{color:var(--ochre);}
+  .hero-sub{max-width:46ch;margin-top:24px;color:var(--bone);font-size:clamp(1.02rem,1rem + 0.3vw,1.28rem);line-height:1.55;}
+  .hero-sub strong{font-weight:600;}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;}
+
+  .btn{
+    font-family:"JetBrains Mono",monospace;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:15px 26px;border-radius:2px;cursor:pointer;border:1px solid var(--ochre);
+    display:inline-flex;align-items:center;gap:10px;transition:all .25s ease;background:transparent;color:var(--bone);
+  }
+  .btn .arw{transition:transform .25s ease;}
+  .btn:hover .arw{transform:translateX(4px);}
+  .btn-solid{background:var(--ochre);color:#1a0e04;border-color:var(--ochre);}
+  .btn-solid:hover{background:var(--ochre-bright);border-color:var(--ochre-bright);}
+  .btn-ghost:hover{background:rgba(214,128,60,0.12);}
+
+  .scroll-cue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--bone-dim);}
+  .scroll-cue .bar{width:1px;height:34px;background:linear-gradient(180deg,var(--ochre),transparent);animation:cue 2.2s ease-in-out infinite;}
+  @keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
+
+  /* ---------- shared section ---------- */
+  .wrap{max-width:var(--maxw);margin:0 auto;}
+  .sec-pad{padding:clamp(72px,12vh,140px) var(--pad);}
+  .sec-label{display:flex;align-items:center;gap:14px;margin-bottom:26px;}
+  .sec-label::before{content:"";width:34px;height:1px;background:var(--ochre);}
+  .sec-head{font-size:clamp(2.3rem,6vw,4.6rem);color:var(--bone);font-weight:800;line-height:.95;}
+
+  /* ---------- meet tex ---------- */
+  .meet{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .meet-grid{display:grid;grid-template-columns:0.82fr 1fr;gap:clamp(34px,5vw,80px);align-items:center;}
+  .meet-photo{position:relative;}
+  .meet-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;filter:grayscale(0.12) contrast(1.04);border:1px solid var(--line-2);}
+  .meet-photo .tag{position:absolute;left:-1px;bottom:18px;background:var(--ochre);color:#1a0e04;padding:7px 14px;font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;}
+  .meet-body h2{margin:18px 0 22px;}
+  .meet-body p{color:var(--bone-dim);margin-bottom:18px;max-width:54ch;}
+  .meet-body p strong{color:var(--bone);font-weight:600;}
+  .quote{border-left:2px solid var(--ochre);padding:6px 0 6px 22px;margin:30px 0;font-size:clamp(1.18rem,1.1rem + 0.5vw,1.55rem);line-height:1.4;color:var(--bone);font-weight:500;}
+  .quote span{display:block;margin-top:12px;font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim);font-weight:400;}
+  .caps{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;}
+  .caps span{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--bone-dim);border:1px solid var(--line-2);padding:7px 13px;border-radius:2px;}
+  .text-link{color:var(--ochre);font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color .25s ease;}
+  .text-link:hover{border-bottom-color:var(--ochre);}
+
+  /* ---------- projects ---------- */
+  .work-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:38px;}
+  .work-intro{max-width:42ch;color:var(--bone-dim);margin-top:14px;}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;}
+  .filters button{
+    font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--line-2);color:var(--bone-dim);padding:9px 16px;border-radius:2px;cursor:pointer;transition:all .22s ease;
+  }
+  .filters button:hover{color:var(--bone);border-color:var(--bone-faint);}
+  .filters button.active{background:var(--ochre);border-color:var(--ochre);color:#1a0e04;}
+
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;grid-auto-flow:dense;}
+  .card{
+    position:relative;overflow:hidden;cursor:pointer;background:var(--surface);
+    grid-column:span 4;aspect-ratio:3/4;border:1px solid var(--line);
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .card.wide{grid-column:span 8;aspect-ratio:16/10;}
+  .card.tall{grid-column:span 4;aspect-ratio:3/4;}
+  .card img{width:100%;height:100%;object-fit:cover;filter:grayscale(0.1) contrast(1.03) brightness(0.92);transition:transform .8s cubic-bezier(.2,.6,.2,1),filter .5s ease;}
+  .card:hover img{transform:scale(1.06);filter:grayscale(0) contrast(1.05) brightness(1);}
+  .card-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;
+    background:linear-gradient(0deg,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 45%,transparent 70%);
+    opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease;}
+  .card:hover .card-overlay{opacity:1;transform:translateY(0);}
+  .card-overlay .frame{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre-bright);}
+  .card-overlay .ctitle{font-family:"Big Shoulders Display",sans-serif;font-weight:700;text-transform:uppercase;font-size:1.35rem;line-height:1;margin-top:6px;color:var(--bone);}
+  .card-overlay .ccat{font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim);margin-top:5px;}
+  .card.hide{display:none;}
+  .corner-no{position:absolute;top:12px;left:12px;font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.12em;color:var(--bone);background:rgba(0,0,0,0.4);padding:3px 7px;border:1px solid var(--line);z-index:2;}
+
+  /* ---------- lightbox ---------- */
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.94);display:none;align-items:center;justify-content:center;padding:clamp(16px,5vw,70px);}
+  .lightbox.open{display:flex;}
+  .lb-stage{position:relative;max-width:1100px;width:100%;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .lb-stage img{max-width:100%;max-height:78vh;object-fit:contain;border:1px solid var(--line-2);}
+  .lb-cap{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;}
+  .lb-cap .frame{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre-bright);}
+  .lb-cap .t{font-family:"Big Shoulders Display",sans-serif;font-weight:700;text-transform:uppercase;font-size:1.6rem;}
+  .lb-cap .c{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim);}
+  .lb-btn{position:absolute;background:rgba(0,0,0,0.4);border:1px solid var(--line-2);color:var(--bone);width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:all .2s ease;}
+  .lb-btn:hover{background:var(--ochre);color:#1a0e04;border-color:var(--ochre);}
+  .lb-prev{left:-6px;top:38%;}
+  .lb-next{right:-6px;top:38%;}
+  .lb-close{position:fixed;top:20px;right:22px;width:46px;height:46px;}
+  @media(max-width:720px){.lb-prev{left:0;top:auto;bottom:-2px;}.lb-next{right:0;top:auto;bottom:-2px;}}
+
+  /* ---------- contact ---------- */
+  .contact{position:relative;background:var(--bg-soft);border-top:1px solid var(--line);}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(34px,5vw,80px);align-items:start;}
+  .contact-info h2{margin:18px 0 20px;}
+  .contact-info p{color:var(--bone-dim);max-width:40ch;margin-bottom:30px;}
+  .info-list{display:flex;flex-direction:column;gap:2px;}
+  .info-row{display:flex;flex-direction:column;gap:4px;padding:18px 0;border-top:1px solid var(--line);}
+  .info-row:last-child{border-bottom:1px solid var(--line);}
+  .info-row .k{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-faint);}
+  .info-row .v{font-size:1.05rem;color:var(--bone);}
+  .info-row a.v{transition:color .2s ease;}
+  .info-row a.v:hover{color:var(--ochre);}
+
+  form{display:flex;flex-direction:column;gap:18px;}
+  .field{display:flex;flex-direction:column;gap:8px;}
+  .field label{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim);}
+  .field input,.field textarea{
+    background:var(--surface);border:1px solid var(--line-2);color:var(--bone);font-family:inherit;font-size:1rem;
+    padding:14px 16px;border-radius:2px;width:100%;transition:border-color .2s ease,background .2s ease;resize:vertical;
+  }
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--ochre);background:var(--surface-2);}
+  .field textarea{min-height:130px;}
+  .form-note{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.06em;color:var(--ochre-bright);min-height:1em;}
+
+  /* ---------- footer ---------- */
+  footer{padding:clamp(44px,7vh,80px) var(--pad) 40px;border-top:1px solid var(--line);background:var(--bg);}
+  .foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:30px;flex-wrap:wrap;}
+  .foot-brand{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3.4rem);text-transform:uppercase;line-height:.9;color:var(--bone);}
+  .foot-brand .by{color:var(--ochre);}
+  .foot-links{display:flex;flex-direction:column;gap:10px;align-items:flex-start;}
+  .foot-links a,.foot-links span{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bone-dim);transition:color .2s ease;}
+  .foot-links a:hover{color:var(--ochre);}
+  .ack{margin-top:42px;padding-top:26px;border-top:1px solid var(--line);color:var(--bone-faint);font-size:.86rem;line-height:1.6;max-width:70ch;}
+  .ack strong{color:var(--bone-dim);font-weight:500;}
+  .copyright{margin-top:26px;font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-faint);}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1);}
+  .reveal.show{opacity:1;transform:none;}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:900px){
+    .meet-grid,.contact-grid{grid-template-columns:1fr;}
+    .meet-photo{max-width:440px;}
+    .card,.card.tall{grid-column:span 6;}
+    .card.wide{grid-column:span 12;}
+  }
+  @media(max-width:680px){
+    .menu-btn{display:flex;}
+    .nav-links{position:fixed;top:var(--nav-h);left:0;right:0;flex-direction:column;align-items:flex-start;gap:0;
+      background:rgba(0,0,0,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--line-2);
+      padding:8px var(--pad) 20px;transform:translateY(-12px);opacity:0;pointer-events:none;transition:all .28s ease;}
+    .nav-links.open{transform:none;opacity:1;pointer-events:auto;}
+    .nav-links li{width:100%;border-bottom:1px solid var(--line);}
+    .nav-links a{display:block;padding:16px 0;font-size:.82rem;}
+    .nav-links a::after{display:none;}
+    .grid{gap:10px;}
+    .card,.card.tall,.card.wide{grid-column:span 12;aspect-ratio:4/3;}
+    .hero h1{font-size:clamp(3rem,18vw,6rem);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1;transform:none;transition:none;}
+    .scroll-cue .bar{animation:none;}
+    *{transition-duration:.01ms!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <a href="#home" class="brand"><span class="lens"></span>Media by Tex</a>
+  <nav>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#meet">Meet Tex</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact me</a></li>
+    </ul>
+  </nav>
+  <button class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section id="home" class="hero">
+  <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+  <div class="hero-bg">
+    <img src="https://picsum.photos/seed/texcountry7/1920/1280" alt="Landscape on Country" />
+  </div>
+  <div class="hero-meta wrap mono">
+    <span>Naarm / Melbourne · VIC</span>
+    <span>Brands · Athletes · Country</span>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow mono">Photographer — Kulin Nations</div>
+    <h1 class="display">Media <span class="by">by</span> Tex</h1>
+    <p class="hero-sub">Photographs of <strong>brands, athletes and Country</strong> — made by Tex Walker, a Gunditjmara photographer working across the Kulin Nations.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-solid">View the work <span class="arw">→</span></a>
+      <a href="#contact" class="btn btn-ghost">Get in touch <span class="arw">→</span></a>
+    </div>
+  </div>
+  <div class="scroll-cue mono"><span>Scroll</span><span class="bar"></span></div>
+</section>
+
+<!-- ===================== MEET TEX ===================== -->
+<section id="meet" class="meet sec-pad">
+  <div class="wrap meet-grid">
+    <div class="meet-photo reveal">
+      <img src="https://picsum.photos/seed/texport4/900/1125" alt="Portrait of Tex Walker" />
+      <span class="tag">Tex Walker</span>
+    </div>
+    <div class="meet-body reveal">
+      <div class="sec-label mono">Meet Tex / 01</div>
+      <h2 class="sec-head display">Gunditjmara man,<br>behind the lens.</h2>
+      <p>Tex Walker is a photographer living and working amongst the <strong>Kulin Nations</strong>. A proud Gunditjmara man, he points the camera at the things he cares about — the land, the people on it, and the brands and athletes shaping culture today.</p>
+      <p>His work moves between commercial shoots and quiet frames of Country. Whether it's a brand campaign, an athlete mid-stride, or first light over the land, the aim stays the same: <strong>honest images with a real sense of place</strong>.</p>
+      <div class="quote">"Working with brands, athletes and taking photos of Country."<span>— Tex</span></div>
+      <p>Open to commissions across Victoria and beyond.</p>
+      <a href="#contact" class="text-link">Say hello <span>→</span></a>
+      <div class="caps">
+        <span>Portrait</span><span>Sport</span><span>Landscape</span><span>Brand</span><span>Events</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROJECTS ===================== -->
+<section id="projects" class="sec-pad">
+  <div class="wrap">
+    <div class="work-top reveal">
+      <div>
+        <div class="sec-label mono">Selected work / 02</div>
+        <h2 class="sec-head display">Projects</h2>
+        <p class="work-intro">A working selection across Country, athletes and brands. Tap a frame to view it larger.</p>
+      </div>
+      <div class="filters mono" id="filters">
+        <button class="active" data-filter="all">All</button>
+        <button data-filter="nature">Nature</button>
+        <button data-filter="athletes">Athletes</button>
+        <button data-filter="brands">Brands</button>
+      </div>
+    </div>
+
+    <div class="grid reveal" id="grid">
+      <!-- cards: data-cat drives filtering; data-title/data-frame feed the lightbox -->
+      <div class="card wide" data-cat="brands">
+        <span class="corner-no">01</span>
+        <img src="images/BRANDS_Race_Ready.jpg" alt="Carbon enduro mountain bike by an alpine lake" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 01 · Brands</span><span class="ctitle">Race Ready</span><span class="ccat">Trail build</span></div>
+      </div>
+      <div class="card tall" data-cat="athletes">
+        <span class="corner-no">02</span>
+        <img src="images/ATHLETES_Round_9_Action.jpg" alt="Baseball batter at the plate" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 02 · Athletes</span><span class="ctitle">Round 9 Action</span><span class="ccat">Baseball</span></div>
+      </div>
+      <div class="card wide" data-cat="nature">
+        <span class="corner-no">03</span>
+        <img src="images/NATURE_Seals.jpg" alt="Australian fur seals on the rocks with a breaking wave" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 03 · Nature</span><span class="ctitle">Seals</span><span class="ccat">Wildlife</span></div>
+      </div>
+      <div class="card tall" data-cat="brands">
+        <span class="corner-no">04</span>
+        <img src="images/BRANDS_Clean_Bike.jpg" alt="Red Sunn e-mountain bike in the bush" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 04 · Brands</span><span class="ctitle">Clean Bike</span><span class="ccat">E-MTB</span></div>
+      </div>
+      <div class="card wide" data-cat="athletes">
+        <span class="corner-no">05</span>
+        <img src="images/ATHLETES_Game_on.jpg" alt="Cricket batsman driving through the off side" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 05 · Athletes</span><span class="ctitle">Game On</span><span class="ccat">Cricket</span></div>
+      </div>
+      <div class="card tall" data-cat="nature">
+        <span class="corner-no">06</span>
+        <img src="images/NATURE_Whale.jpg" alt="Humpback whale tail above the water" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 06 · Nature</span><span class="ctitle">Whale</span><span class="ccat">Migration</span></div>
+      </div>
+      <div class="card wide" data-cat="brands">
+        <span class="corner-no">07</span>
+        <img src="images/BRANDS_Enduro_Beast.jpg" alt="Black carbon enduro bike on a rocky trail" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 07 · Brands</span><span class="ctitle">Enduro Beast</span><span class="ccat">Enduro</span></div>
+      </div>
+      <div class="card tall" data-cat="athletes">
+        <span class="corner-no">08</span>
+        <img src="images/ATHLETES_Game_Face.jpg" alt="Baseball fielder applying the tag at the base" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 08 · Athletes</span><span class="ctitle">Game Face</span><span class="ccat">The tag</span></div>
+      </div>
+      <div class="card wide" data-cat="nature">
+        <span class="corner-no">09</span>
+        <img src="images/NATURE_Under_the_Sea.jpg" alt="Giant spider crab on the sea floor" loading="lazy">
+        <div class="card-overlay"><span class="frame">Frame 09 · Nature</span><span class="ctitle">Under the Sea</span><span class="ccat">Marine</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" class="contact sec-pad">
+  <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+  <div class="wrap contact-grid">
+    <div class="contact-info reveal">
+      <div class="sec-label mono">Get in touch / 03</div>
+      <h2 class="sec-head display">Let's make<br>something.</h2>
+      <p>Commissions, collaborations, or a yarn about a project — drop a line and Tex will get back to you.</p>
+      <div class="info-list">
+        <div class="info-row"><span class="k">Email</span><a class="v" href="mailto:hello@mediabytex.com.au">hello@mediabytex.com.au</a></div>
+        <div class="info-row"><span class="k">Instagram</span><a class="v" href="https://www.instagram.com/media_by_tex/" target="_blank" rel="noopener">@media_by_tex</a></div>
+        <div class="info-row"><span class="k">Based</span><span class="v">Kulin Nations · Melbourne, VIC</span></div>
+        <div class="info-row"><span class="k">Available for</span><span class="v">Brand · Sport · Landscape · Events</span></div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <form id="contactForm" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" placeholder="Jane Citizen" required>
+        </div>
+        <div class="field">
+          <label for="email">Your email</label>
+          <input type="email" id="email" name="email" placeholder="jane@email.com" required>
+        </div>
+        <div class="field">
+          <label for="message">What's the project?</label>
+          <textarea id="message" name="message" placeholder="Tell Tex a bit about what you're after, dates and location…" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-solid">Send message <span class="arw">→</span></button>
+        <div class="form-note" id="formNote"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">Media <span class="by">by</span> Tex</div>
+      <div class="foot-links">
+        <a href="#home">Home</a>
+        <a href="#meet">Meet Tex</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact me</a>
+        <a href="https://www.instagram.com/media_by_tex/" target="_blank" rel="noopener">Instagram ↗</a>
+      </div>
+    </div>
+    <p class="ack"><strong>Media by Tex acknowledges the Traditional Owners of the lands on which we live and work — the peoples of the Kulin Nations — and pays respect to Elders past and present.</strong> Always was, always will be, Aboriginal land.</p>
+    <p class="copyright">© <span id="year"></span> Media by Tex · Photography by Tex Walker</p>
+  </div>
+</footer>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">✕</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lb-stage">
+    <img id="lbImg" src="" alt="">
+    <div class="lb-cap">
+      <span class="frame" id="lbFrame"></span>
+      <span class="t" id="lbTitle"></span>
+      <span class="c" id="lbCat"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var d=document;
+
+  /* year */
+  d.getElementById('year').textContent=new Date().getFullYear();
+
+  /* nav scroll state */
+  var nav=d.getElementById('nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.scrollY>40);
+  },{passive:true});
+
+  /* mobile menu */
+  var menuBtn=d.getElementById('menuBtn'),navLinks=d.getElementById('navLinks');
+  menuBtn.addEventListener('click',function(){
+    menuBtn.classList.toggle('open');navLinks.classList.toggle('open');
+  });
+  navLinks.addEventListener('click',function(e){
+    if(e.target.tagName==='A'){menuBtn.classList.remove('open');navLinks.classList.remove('open');}
+  });
+
+  /* active link via IntersectionObserver */
+  var links=Array.prototype.slice.call(d.querySelectorAll('.nav-links a'));
+  var sections=['home','meet','projects','contact'].map(function(id){return d.getElementById(id);});
+  var secObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+en.target.id);});
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  sections.forEach(function(s){if(s)secObs.observe(s);});
+
+  /* reveal on scroll */
+  var revObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('show');revObs.unobserve(en.target);}});
+  },{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+  d.querySelectorAll('.reveal').forEach(function(el){revObs.observe(el);});
+
+  /* Gallery content is loaded from gallery.json (same folder). Edit there or use admin.html. */
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  /* filters */
+  var filterWrap=d.getElementById('filters'),cards=[];
+  filterWrap.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    filterWrap.querySelectorAll('button').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    var f=b.getAttribute('data-filter');
+    cards.forEach(function(c){
+      var show=(f==='all'||c.getAttribute('data-cat')===f);
+      c.classList.toggle('hide',!show);
+    });
+  });
+
+  /* lightbox */
+  var lb=d.getElementById('lightbox'),lbImg=d.getElementById('lbImg'),
+      lbFrame=d.getElementById('lbFrame'),lbTitle=d.getElementById('lbTitle'),lbCat=d.getElementById('lbCat');
+  var current=[],idx=0;
+
+  function visibleCards(){return cards.filter(function(c){return !c.classList.contains('hide');});}
+  function dataFor(card){
+    var ov=card.querySelector('.card-overlay');
+    return {
+      src:card.querySelector('img').getAttribute('src').replace(/\/\d+\/\d+$/, '/1600/1100'),
+      frame:ov.children[0].textContent,
+      title:ov.children[1].textContent,
+      cat:ov.children[2].textContent
+    };
+  }
+  function render(){
+    var item=current[idx];if(!item)return;
+    lbImg.setAttribute('src',item.src);
+    lbImg.setAttribute('alt',item.title);
+    lbFrame.textContent=item.frame;lbTitle.textContent=item.title;lbCat.textContent=item.cat;
+  }
+  function openAt(card){
+    current=visibleCards().map(dataFor);
+    idx=visibleCards().indexOf(card);
+    if(idx<0)idx=0;
+    render();lb.classList.add('open');lb.setAttribute('aria-hidden','false');d.body.style.overflow='hidden';
+  }
+  function close(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');d.body.style.overflow='';}
+  function step(n){idx=(idx+n+current.length)%current.length;render();}
+
+  function bindGallery(){
+    cards=Array.prototype.slice.call(d.querySelectorAll('#grid .card'));
+    cards.forEach(function(c){ if(c.__b)return; c.__b=true; c.addEventListener('click',function(){openAt(c);}); });
+  }
+  bindGallery();
+
+  /* ---- build a card from a gallery.json entry ---- */
+  function cardHTML(p,i){
+    var n=('0'+(i+1)).slice(-2);
+    var label=({nature:'Nature',athletes:'Athletes',brands:'Brands'})[p.category]||p.category;
+    var sz=(p.size==='wide')?'wide':'tall';
+    return '<div class="card '+sz+'" data-cat="'+esc(p.category)+'">'+
+      '<span class="corner-no">'+n+'</span>'+
+      '<img src="'+esc(p.image||p.imageUrl)+'" alt="'+esc(p.title)+'" loading="lazy">'+
+      '<div class="card-overlay"><span class="frame">Frame '+n+' \u00b7 '+esc(label)+'</span>'+
+      '<span class="ctitle">'+esc(p.title)+'</span>'+
+      '<span class="ccat">'+esc(p.caption||label)+'</span></div></div>';
+  }
+  /* ---- load gallery from gallery.json (keeps the built-in frames if it can't load) ---- */
+  fetch('gallery.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(data){
+    var list=data&&(data.projects||data);
+    if(list&&list.length){
+      var pub=list.filter(function(x){return x.published!==false;});
+      d.getElementById('grid').innerHTML=pub.map(cardHTML).join('');
+      bindGallery();
+      filterWrap.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('active',i===0);});
+    }
+  }).catch(function(){/* leave the built-in frames in place */});
+
+  d.getElementById('lbClose').addEventListener('click',close);
+  d.getElementById('lbPrev').addEventListener('click',function(){step(-1);});
+  d.getElementById('lbNext').addEventListener('click',function(){step(1);});
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  d.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open'))return;
+    if(e.key==='Escape')close();
+    if(e.key==='ArrowRight')step(1);
+    if(e.key==='ArrowLeft')step(-1);
+  });
+
+  /* contact form -> opens the visitor's email app */
+  var form=d.getElementById('contactForm'),note=d.getElementById('formNote');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=d.getElementById('name').value.trim(),
+        email=d.getElementById('email').value.trim(),
+        msg=d.getElementById('message').value.trim();
+    if(!name||!email||!msg){note.textContent='Please fill in all fields first.';return;}
+    var subject=encodeURIComponent('New enquiry from '+name+' — Media by Tex');
+    var body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\n'+msg);
+    note.textContent='Opening your email app…';
+    window.location.href='mailto:hello@mediabytex.com.au?subject='+subject+'&body='+body;
+  });
+})();
+</script>
+</body>
+</html>
