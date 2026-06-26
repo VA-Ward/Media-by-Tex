@@ -92,12 +92,53 @@ details ol{margin:4px 0 14px 18px;color:var(--bone-faint);font-size:.84rem;line-
 .toast.err{border-color:var(--red);color:var(--ochre-bright);}
 .empty{text-align:center;padding:60px 20px;color:var(--bone-faint);font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.06em;border:1px dashed var(--line);border-radius:4px;}
 @media(max-width:560px){.row{grid-template-columns:1fr;}.img-pick{flex-direction:column;}}
+.ig-panel{margin-top:40px;border:1px solid var(--line);border-radius:4px;padding:22px 22px 24px;background:var(--bg-soft);}
+.ig-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:6px;}
+.ig-panel-head h2{font-family:"Big Shoulders Display",sans-serif;font-weight:700;text-transform:uppercase;font-size:1.4rem;}
+.ig-help{color:var(--bone-faint);font-size:.85rem;line-height:1.6;margin-bottom:14px;}
+textarea{background:var(--surface);border:1px solid var(--line-2);color:var(--bone);font-family:"JetBrains Mono",monospace;font-size:.8rem;padding:12px 13px;border-radius:2px;width:100%;resize:vertical;line-height:1.5;}
+textarea:focus{outline:none;border-color:var(--ochre);background:var(--surface-2);}
+.ig-panel-actions{display:flex;gap:10px;margin-top:12px;}
+.ig-preview{margin-top:16px;border:1px dashed var(--line-2);border-radius:3px;padding:14px;min-height:80px;}
+code{font-family:"JetBrains Mono",monospace;font-size:.85em;color:var(--ochre-bright);background:rgba(214,128,60,.1);padding:1px 5px;border-radius:2px;}
 </style>
 </head>
 <body>
 
 <!-- ===== CONNECT ===== -->
-<div id="connectScreen" class="connect">
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen" class="connect">
+  <form id="loginForm" class="connect-card">
+    <div class="brand"><span class="lens"></span>Media by Tex</div>
+    <p class="connect-sub">Admin sign in</p>
+    <div class="field">
+      <label for="lu">Username</label>
+      <input id="lu" type="text" autocomplete="username" required />
+    </div>
+    <div class="field">
+      <label for="lp">Password</label>
+      <input id="lp" type="password" autocomplete="current-password" required />
+    </div>
+    <button type="submit" class="btn btn-solid full">Sign in</button>
+    <div id="loginMsg" class="msg" style="margin-top:14px;"></div>
+
+    <details style="margin-top:18px;">
+      <summary>Set or change the password</summary>
+      <ol>
+        <li>Type the password you want and click <b>Generate</b>.</li>
+        <li>Copy the line it gives you.</li>
+        <li>Open <b>admin.html</b>, replace the line starting with <code>var ADMIN_PASS_SHA256</code> with the copied line (change <code>ADMIN_USER</code> too if you want a different username), and re-upload admin.html.</li>
+      </ol>
+      <div class="field"><label for="np">New password</label><input id="np" type="text" placeholder="type a new password" /></div>
+      <button type="button" id="genBtn" class="btn btn-ghost sm">Generate</button>
+      <div id="genOut" class="msg" style="margin-top:12px;word-break:break-all;"></div>
+    </details>
+    <p class="hint" style="margin-top:16px;">Default login is <b>tex</b> / <b>mediabytex</b> — please change it with the tool above.</p>
+  </form>
+</div>
+
+<!-- ===== CONNECT ===== -->
+<div id="connectScreen" class="connect hidden">
   <form id="connectForm" class="connect-card">
     <div class="brand"><span class="lens"></span>Media by Tex</div>
     <p class="connect-sub">Gallery admin</p>
@@ -145,6 +186,20 @@ details ol{margin:4px 0 14px 18px;color:var(--bone-faint);font-size:.84rem;line-
     </div>
     <p class="subhint">Use ▲ ▼ to set the order photos appear on the site. Changes go live a minute after you save.</p>
     <div id="projectList" class="proj-grid"></div>
+
+    <div class="ig-panel">
+      <div class="ig-panel-head">
+        <h2>Instagram feed</h2>
+        <a class="mono" href="https://www.sociablekit.com/instagram-feed-widget/" target="_blank" rel="noopener">Get a feed ↗</a>
+      </div>
+      <p class="ig-help">Paste the embed code from SociableKIT (the <b>Instagram Profile</b> widget for <b>media_by_tex</b>). Leave this blank to hide the Instagram section on the site. Saved with the button below.</p>
+      <textarea id="igEmbed" rows="4" placeholder="Paste your SociableKIT embed code here…"></textarea>
+      <div class="ig-panel-actions">
+        <button type="button" id="igPreviewBtn" class="btn btn-ghost sm">Preview</button>
+        <button type="button" id="igClearBtn" class="btn btn-ghost sm">Clear</button>
+      </div>
+      <div id="igPreview" class="ig-preview hidden"></div>
+    </div>
   </main>
 
   <div class="savebar">
@@ -206,7 +261,18 @@ details ol{margin:4px 0 14px 18px;color:var(--bone-faint);font-size:.84rem;line-
   function b64decode(b64){return decodeURIComponent(escape(atob(b64.replace(/\n/g,''))));}
 
   var owner="", repo="", branch="main", token="";
-  var projects=[], gallerySha=null;
+  var projects=[], gallerySha=null, instagramEmbed="";
+
+  /* ===== ADMIN LOGIN (lightweight gate) ===== */
+  var ADMIN_USER = "tex";
+  var ADMIN_PASS_SHA256 = "134ec48ac968b21f16f42b444a26a5aa8f805b3f34778dc03a346deab5a38cb9"; // default password: mediabytex
+  function sha256hex(str){
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");
+    });
+  }
+  function showLogin(){$("#loginScreen").classList.remove("hidden");$("#connectScreen").classList.add("hidden");$("#app").classList.add("hidden");}
+  function showConnect(){$("#loginScreen").classList.add("hidden");$("#connectScreen").classList.remove("hidden");$("#app").classList.add("hidden");}
 
   /* ---------- toast / status ---------- */
   var toastTimer;
@@ -260,27 +326,68 @@ details ol{margin:4px 0 14px 18px;color:var(--bone-faint);font-size:.84rem;line-
 
   function loadGallery(){
     return gh("/contents/gallery.json?ref="+encodeURIComponent(branch)).then(function(res){
-      if(res.status===404){projects=[];gallerySha=null;return;}
+      if(res.status===404){projects=[];instagramEmbed="";gallerySha=null;return;}
       return res.json().then(function(data){
         if(!res.ok) throw new Error(ghError(res,data));
         gallerySha=data.sha;
         var parsed=JSON.parse(b64decode(data.content));
         projects=(parsed&&parsed.projects)||parsed||[];
+        instagramEmbed=(parsed&&typeof parsed.instagramEmbed==="string")?parsed.instagramEmbed:"";
       });
     });
   }
 
   function showApp(){
+    $("#loginScreen").classList.add("hidden");
     $("#connectScreen").classList.add("hidden");
     $("#app").classList.remove("hidden");
     $("#siteLink").href=siteUrlGuess();
+    $("#igEmbed").value=instagramEmbed||"";
     status(projects.length+" "+(projects.length===1?"photo":"photos")+" loaded","ok");
     render();
   }
 
   $("#signoutBtn").addEventListener("click",function(){
-    try{sessionStorage.removeItem("mbt_token");}catch(e){}
+    try{sessionStorage.removeItem("mbt_token");sessionStorage.removeItem("mbt_admin_authed");}catch(e){}
     token="";location.reload();
+  });
+
+  /* ---------- login gate ---------- */
+  $("#loginForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var msg=$("#loginMsg");msg.className="msg";msg.textContent="Checking…";
+    var u=$("#lu").value.trim(), p=$("#lp").value;
+    sha256hex(p).then(function(h){
+      if(u===ADMIN_USER && h===ADMIN_PASS_SHA256){
+        try{sessionStorage.setItem("mbt_admin_authed","1");}catch(e){}
+        msg.textContent="";$("#lp").value="";
+        enterAdmin();
+      }else{msg.className="msg err";msg.textContent="Wrong username or password.";}
+    }).catch(function(){msg.className="msg err";msg.textContent="This browser can't check the password (needs https).";});
+  });
+  $("#genBtn").addEventListener("click",function(){
+    var p=$("#np").value;
+    if(!p){$("#genOut").className="msg err";$("#genOut").textContent="Type a password first.";return;}
+    sha256hex(p).then(function(h){$("#genOut").className="msg ok";$("#genOut").textContent='var ADMIN_PASS_SHA256 = "'+h+'";';});
+  });
+
+  /* ---------- Instagram feed panel ---------- */
+  function injectEmbed(box,html){
+    box.innerHTML=html||"";
+    Array.prototype.forEach.call(box.querySelectorAll("script"),function(old){
+      var s=document.createElement("script");
+      if(old.src)s.src=old.src; else s.textContent=old.textContent;
+      if(old.async)s.async=true; if(old.defer)s.defer=true;
+      old.parentNode.replaceChild(s,old);
+    });
+  }
+  $("#igPreviewBtn").addEventListener("click",function(){
+    var v=$("#igEmbed").value.trim(), box=$("#igPreview");
+    if(!v){box.classList.add("hidden");box.innerHTML="";return;}
+    box.classList.remove("hidden");injectEmbed(box,v);
+  });
+  $("#igClearBtn").addEventListener("click",function(){
+    $("#igEmbed").value="";$("#igPreview").classList.add("hidden");$("#igPreview").innerHTML="";
   });
 
   /* ---------- render ---------- */
@@ -416,9 +523,10 @@ details ol{margin:4px 0 14px 18px;color:var(--bone-faint);font-size:.84rem;line-
       });
     }
     function saveGallery(){
-      status("Saving gallery…","");
+      status("Saving…","");
+      instagramEmbed=$("#igEmbed").value.trim();
       var clean=projects.map(function(p){var o={};["id","title","category","caption","size","image","published"].forEach(function(k){if(p[k]!==undefined)o[k]=p[k];});return o;});
-      var content=b64encode(JSON.stringify({projects:clean},null,2));
+      var content=b64encode(JSON.stringify({projects:clean,instagramEmbed:instagramEmbed},null,2));
       return putFile("gallery.json",content,gallerySha,"Update gallery").then(function(data){
         gallerySha=data.content.sha;
         status("Saved ✓  Live on your site in about a minute.","ok");
@@ -430,16 +538,24 @@ details ol{margin:4px 0 14px 18px;color:var(--bone-faint);font-size:.84rem;line-
   }
   $("#saveBtn").addEventListener("click",saveAll);
 
-  /* ---------- resume a session ---------- */
-  (function resume(){
+  /* ---------- enter admin (after login) ---------- */
+  function enterAdmin(){
     var savedToken="",savedRepo=null;
     try{savedToken=sessionStorage.getItem("mbt_token")||"";}catch(e){}
     try{savedRepo=JSON.parse(localStorage.getItem("mbt_repo")||"null");}catch(e){}
     if(savedRepo){ $("#repoUrl").value="https://github.com/"+savedRepo.owner+"/"+savedRepo.repo; }
     if(savedToken&&savedRepo){
       owner=savedRepo.owner;repo=savedRepo.repo;branch=savedRepo.branch||"main";token=savedToken;
-      loadGallery().then(showApp).catch(function(){/* token expired etc → stay on connect screen */ $("#token").focus();});
+      loadGallery().then(showApp).catch(function(){showConnect();$("#token").focus();});
+    }else{
+      showConnect();
     }
+  }
+  /* ---------- startup ---------- */
+  (function start(){
+    var authed=false;
+    try{authed=sessionStorage.getItem("mbt_admin_authed")==="1";}catch(e){}
+    if(authed) enterAdmin(); else showLogin();
   })();
 })();
 </script>

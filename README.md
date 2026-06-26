@@ -28,9 +28,11 @@ That's the site live. Nothing else runs.
 
 ### Way A — The admin tool (point and click)
 
-Open **`admin.html`** on your live site (e.g. `https://your-name.github.io/your-repo/admin.html`). It lets you add, edit, reorder, hide, and delete photos, then saves the changes back into your repo for you.
+Open **`admin.html`** on your live site (e.g. `https://your-name.github.io/your-repo/admin.html`). It lets you add, edit, reorder, hide, and delete photos — and manage your Instagram feed — then saves the changes back into your repo for you.
 
-The first time, it asks for two things:
+**Signing in.** The admin is password-protected. The default login is username **`tex`**, password **`mediabytex`** — please change it: on the sign-in screen open *"Set or change the password"*, type a new password, click **Generate**, and follow the one-line instruction it gives you. (This login keeps casual visitors out; the real lock on saving is still your GitHub token below, so nothing can be changed without it.)
+
+After signing in, the first time it asks for two things:
 
 - **Your repository address** — paste your repo's GitHub URL.
 - **An access token** — a one-time key so it can save changes. The tool has a step-by-step "How do I get a token?" link built in. In short: create a **fine-grained token** at GitHub, give it access to **only your website repo**, with **Contents: Read and write** permission, and paste it in.
@@ -63,6 +65,22 @@ The order of the blocks is the order they appear on the site. Edit on GitHub (pe
 A static site can't run an inbox, so the contact form opens the visitor's email app with their message ready to send to you. To change the address it sends to, update `hello@mediabytex.com.au` in `index.html`.
 
 If you'd prefer messages to arrive automatically without the visitor's email app opening, a free form service (such as Formspree or Web3Forms) can do that on a static site — just ask and I'll wire it in.
+
+---
+
+## 4. Instagram feed
+
+The page has an **On Instagram** section (between Projects and Contact) for a live feed of @media_by_tex's posts, powered by SociableKIT (free forever). Until you connect it, that section shows a small placeholder note — visitors won't see anything broken. You manage it from the **admin panel** (no editing code), in the *Instagram feed* box below the photos.
+
+To switch it on (about two minutes, no cost):
+
+1. Sign up at [sociablekit.com](https://www.sociablekit.com).
+2. Choose the **Instagram Profile** widget.
+3. Enter the username `media_by_tex` and pick a layout and colours (a dark/grid layout suits the site).
+4. Click **Embed on website** and copy the code it gives you.
+5. In the admin panel, paste that code into the **Instagram feed** box (use **Preview** to check it), then click **Save to GitHub**.
+
+To remove the feed later, just clear that box and save. A couple of notes: new posts appear on the site after SociableKIT's sync runs (every so often, not instantly — faster sync is a paid option), and this shows a live feed of your latest posts, separate from the curated Projects gallery. If you'd like the feed in the top menu too, just ask.
 
 ---
 

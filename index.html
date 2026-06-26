@@ -158,6 +158,11 @@
   /* ---------- projects ---------- */
   .work-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:38px;}
   .work-intro{max-width:42ch;color:var(--bone-dim);margin-top:14px;}
+  .work-intro a{color:var(--ochre);transition:color .2s;}
+  .work-intro a:hover{color:var(--ochre-bright);}
+  .insta-feed{margin-top:32px;min-height:140px;}
+  .insta-placeholder{display:flex;align-items:center;justify-content:center;min-height:180px;border:1px dashed var(--line-2);border-radius:4px;color:var(--bone-faint);text-align:center;padding:24px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;}
+  .insta-btn{margin-top:34px;}
   .filters{display:flex;flex-wrap:wrap;gap:8px;}
   .filters button{
     font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
@@ -398,12 +403,27 @@
   </div>
 </section>
 
+<!-- ===================== INSTAGRAM (SociableKIT) ===================== -->
+<section id="instagram" class="insta sec-pad">
+  <div class="wrap">
+    <div class="sec-label mono">On Instagram / 03</div>
+    <h2 class="sec-head display">Latest frames.</h2>
+    <p class="work-intro">New work and behind-the-scenes, straight from <a href="https://www.instagram.com/media_by_tex/" target="_blank" rel="noopener">@media_by_tex</a>.</p>
+
+    <div class="insta-feed reveal" id="insta-feed">
+      <div class="insta-placeholder mono">Connect your Instagram feed in the admin panel to show your latest posts here.</div>
+    </div>
+
+    <a class="btn btn-ghost insta-btn" href="https://www.instagram.com/media_by_tex/" target="_blank" rel="noopener">Follow on Instagram <span class="arw">→</span></a>
+  </div>
+</section>
+
 <!-- ===================== CONTACT ===================== -->
 <section id="contact" class="contact sec-pad">
   <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
   <div class="wrap contact-grid">
     <div class="contact-info reveal">
-      <div class="sec-label mono">Get in touch / 03</div>
+      <div class="sec-label mono">Get in touch / 04</div>
       <h2 class="sec-head display">Let's make<br>something.</h2>
       <p>Commissions, collaborations, or a yarn about a project — drop a line and Tex will get back to you.</p>
       <div class="info-list">
@@ -582,6 +602,16 @@
       d.getElementById('grid').innerHTML=pub.map(cardHTML).join('');
       bindGallery();
       filterWrap.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('active',i===0);});
+    }
+    var embed=data&&data.instagramEmbed, box=d.getElementById('insta-feed');
+    if(embed&&box){
+      box.innerHTML=embed;
+      Array.prototype.forEach.call(box.querySelectorAll('script'),function(old){
+        var sc=d.createElement('script');
+        if(old.src)sc.src=old.src; else sc.textContent=old.textContent;
+        if(old.async)sc.async=true; if(old.defer)sc.defer=true;
+        old.parentNode.replaceChild(sc,old);
+      });
     }
   }).catch(function(){/* leave the built-in frames in place */});
 
