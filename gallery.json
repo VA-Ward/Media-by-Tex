@@ -1,14 +1,86 @@
 {
   "projects": [
-    { "id": "race-ready",    "title": "Race Ready",    "category": "brands",   "caption": "Trail build", "size": "wide", "image": "images/BRANDS_Race_Ready.jpg",        "published": true },
-    { "id": "round-9",       "title": "Round 9 Action", "category": "athletes", "caption": "Baseball",    "size": "tall", "image": "images/ATHLETES_Round_9_Action.jpg",   "published": true },
-    { "id": "seals",         "title": "Seals",          "category": "nature",   "caption": "Wildlife",    "size": "wide", "image": "images/NATURE_Seals.jpg",              "published": true },
-    { "id": "clean-bike",    "title": "Clean Bike",     "category": "brands",   "caption": "E-MTB",       "size": "tall", "image": "images/BRANDS_Clean_Bike.jpg",         "published": true },
-    { "id": "game-on",       "title": "Game On",        "category": "athletes", "caption": "Cricket",     "size": "wide", "image": "images/ATHLETES_Game_on.jpg",          "published": true },
-    { "id": "whale",         "title": "Whale",          "category": "nature",   "caption": "Migration",   "size": "tall", "image": "images/NATURE_Whale.jpg",              "published": true },
-    { "id": "enduro-beast",  "title": "Enduro Beast",   "category": "brands",   "caption": "Enduro",      "size": "wide", "image": "images/BRANDS_Enduro_Beast.jpg",       "published": true },
-    { "id": "game-face",     "title": "Game Face",      "category": "athletes", "caption": "The tag",     "size": "tall", "image": "images/ATHLETES_Game_Face.jpg",        "published": true },
-    { "id": "under-the-sea", "title": "Under the Sea",  "category": "nature",   "caption": "Marine",      "size": "wide", "image": "images/NATURE_Under_the_Sea.jpg",      "published": true }
+    {
+      "id": "race-ready",
+      "title": "Race Ready",
+      "category": "brands",
+      "caption": "Trail build",
+      "size": "wide",
+      "image": "images/img-mqukatx9-jrmip.jpg",
+      "published": true
+    },
+    {
+      "id": "round-9",
+      "title": "Round 9 Action",
+      "category": "athletes",
+      "caption": "Baseball",
+      "size": "tall",
+      "image": "images/img-mqukaw2t-0rdgx.jpg",
+      "published": true
+    },
+    {
+      "id": "seals",
+      "title": "Seals",
+      "category": "nature",
+      "caption": "Wildlife",
+      "size": "wide",
+      "image": "images/img-mqukaxsu-grbl3.jpg",
+      "published": true
+    },
+    {
+      "id": "clean-bike",
+      "title": "Clean Bike",
+      "category": "brands",
+      "caption": "E-MTB",
+      "size": "tall",
+      "image": "images/img-mqukaz8s-0xk64.jpg",
+      "published": true
+    },
+    {
+      "id": "game-on",
+      "title": "Game On",
+      "category": "athletes",
+      "caption": "Cricket",
+      "size": "wide",
+      "image": "images/img-mqukb1ki-ibmbz.jpg",
+      "published": true
+    },
+    {
+      "id": "whale",
+      "title": "Whale",
+      "category": "nature",
+      "caption": "Migration",
+      "size": "tall",
+      "image": "images/img-mqukb392-6y29l.jpg",
+      "published": true
+    },
+    {
+      "id": "enduro-beast",
+      "title": "Enduro Beast",
+      "category": "brands",
+      "caption": "Enduro",
+      "size": "wide",
+      "image": "images/img-mqukb4uw-2ej25.jpg",
+      "published": true
+    },
+    {
+      "id": "game-face",
+      "title": "Game Face",
+      "category": "athletes",
+      "caption": "The tag",
+      "size": "tall",
+      "image": "images/img-mqukb6tz-u3u23.jpg",
+      "published": true
+    },
+    {
+      "id": "under-the-sea",
+      "title": "Under the Sea",
+      "category": "nature",
+      "caption": "Marine",
+      "size": "wide",
+      "image": "images/img-mqukb8qw-mkmtv.jpg",
+      "published": true
+    }
   ],
-  "instagramEmbed": ""
+  "instagramEmbed": "<div class=\"sk-instagram-feed\" data-embed-id=\"25692636\"></div><script src=\"https://widgets.sociablekit.com/instagram-feed/widget.js\" defer></script>"
 }
